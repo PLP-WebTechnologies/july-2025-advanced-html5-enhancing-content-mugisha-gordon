@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Assignment: Well-structured HTML5 content with lists, tables, media, and a complete, accessible, validated HTML5 form." />
+  <title>Enhanced HTML5 Content & Form</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#141a2e;
+      --muted:#8fa0c7;
+      --text:#e7ecff;
+      --accent:#6dd5ff;
+      --accent-2:#a17cff;
+      --danger:#ff6b6b;
+      --ok:#00c896;
+      --ring: #6dd5ff66;
+      --border:#273051;
+      --radius:12px;
+    }
+    /* Base */
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 1200px at 0% 0%, #132044 0%, transparent 60%),
+        radial-gradient(1000px 800px at 100% 0%, #1b1b3a 0%, transparent 60%),
+        linear-gradient(180deg, #0b0f1f, #0b1020);
+    }
+    a{color:var(--accent)}
+    img,svg,video{max-width:100%;height:auto}
+    .container{max-width:1100px;margin-inline:auto;padding:24px}
+    header{
+      position:sticky;top:0;z-index:10;backdrop-filter:saturate(140%) blur(8px);
+      background:linear-gradient(180deg, #0b1020ee, #0b1020cc 60%, transparent);
+      border-bottom:1px solid var(--border);
+    }
+    nav ul{
+      display:flex;gap:18px;list-style:none;margin:0;padding:8px 0;flex-wrap:wrap
+    }
+    nav a{display:inline-block;padding:8px 12px;border-radius:999px;background:#101636;border:1px solid var(--border);text-decoration:none}
+    nav a:focus-visible, a.skip-link:focus{
+      outline:3px solid var(--accent); outline-offset:2px;
+    }
+    .skip-link{
+      position:absolute;left:-9999px;top:auto; width:1px;height:1px;overflow:hidden;
+    }
+    .hero{
+      display:grid;gap:16px;padding:24px;border:1px solid var(--border);border-radius:var(--radius);
+      background:
+        radial-gradient(600px 300px at 80% -20%, #3a1b7b33, transparent 60%),
+        linear-gradient(180deg, #11183a, #0d1430);
+      margin-block:20px
+    }
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#101636;border:1px solid var(--border);color:var(--muted)}
+    h1,h2,h3{line-height:1.2;margin:0 0 10px}
+    h1{font-size:clamp(1.6rem, 2.2vw + 1rem, 2.4rem)}
+    h2{margin-top:28px}
+    .grid-2{
+      display:grid;gap:18px;
+      grid-template-columns:1fr;
+    }
+    @media (min-width:760px){
+      .grid-2{grid-template-columns:1fr 1fr}
+    }
+    table{
+      width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--border);
+      border-radius:10px;overflow:hidden;background:#0f1431;
+    }
+    caption{caption-side:top;text-align:left;padding:12px;font-weight:600;color:var(--muted)}
+    thead th{background:#121a3c;color:#cfe2ff}
+    th, td{padding:12px;border-bottom:1px solid #212b54}
+    tbody tr:nth-child(odd){background:#0f1737}
+    tfoot td{background:#101636;color:#cbd5ff}
+
+    figure{margin:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#0f1431}
+    figcaption{padding:10px;color:#cfd8ff;background:#101636;border-top:1px solid var(--border)}
+
+    /* Form */
+    form{
+      display:grid;gap:18px;padding:20px;border:1px solid var(--border);
+      border-radius:var(--radius);background:linear-gradient(180deg, #0e1431, #0c1230);
+    }
+    .form-grid{
+      display:grid;gap:14px;
+      grid-template-columns:1fr;
+    }
+    @media (min-width:880px){
+      .form-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+    }
+    fieldset{
+      border:1px dashed #2a3466;border-radius:10px;padding:14px;margin:0
+    }
+    legend{padding:0 8px;color:#cfe2ff;font-weight:600}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    .required label::after{
+      content:" *"; color:var(--danger); font-weight:700;
+    }
+    .control{
+      display:flex;flex-direction:column;gap:8px
+    }
+    input, select, textarea{
+      appearance:none;
+      background:#0b1333;border:1px solid #283260;color:var(--text);
+      border-radius:10px;padding:12px 12px; font:inherit;
+      transition:border-color .2s, box-shadow .2s, background .2s;
+    }
+    textarea{min-height:110px;resize:vertical}
+    input[type="range"]{padding:0}
+    input::placeholder, textarea::placeholder{color:#96a3cd}
+    input:focus, select:focus, textarea:focus{
+      outline:none;border-color:var(--accent); box-shadow:0 0 0 4px var(--ring)
+    }
+    input:required:invalid, select:required:invalid, textarea:required:invalid{
+      border-color:var(--danger)
+    }
+    .hint{color:var(--muted);font-size:.92rem}
+    .inline{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap
+    }
+    .choices{display:flex; gap:12px; flex-wrap:wrap}
+    .choices label{font-weight:500}
+    .sr-only{
+      position:absolute !important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    .note{
+      padding:10px;border-radius:10px; background:#0e1a3a;border:1px solid #283260;color:#cfe2ff
+    }
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
+    button, input[type="submit"], input[type="reset"]{
+      cursor:pointer; border:1px solid var(--border); color:var(--text);
+      background:linear-gradient(180deg, #17214a, #10183a); padding:12px 16px; border-radius:10px;
+      font-weight:600
+    }
+    .primary{background:linear-gradient(180deg, var(--accent), #3bb2ff); color:#001026; border-color:#3bb2ff}
+    .outline{background:transparent}
+    .success{color:#022b1f; background:linear-gradient(180deg, #29ffc6, #20d5a8)}
+    .accent{color:#100a2b; background:linear-gradient(180deg, #c1a4ff, #9b79ff)}
+    .footnote{font-size:.9rem;color:#a9b9e6}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:#101636;border:1px solid var(--border);padding:0 .4em;border-radius:6px}
+    /* Checkbox / radio color */
+    input[type="checkbox"], input[type="radio"]{accent-color:var(--accent-2)}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#form">Skip to registration form</a>
+
+  <header>
+    <div class="container">
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#curriculum">Curriculum</a></li>
+          <li><a href="#media">Media</a></li>
+          <li><a href="#form">Registration Form</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="overview" class="container" role="main">
+    <section class="hero" aria-labelledby="title">
+      <div>
+        <span class="pill">📘 Assignment</span>
+        <h1 id="title">Enhancing HTML5 Content & Mastering Forms</h1>
+        <p>Build a clear, accessible page featuring lists, tables, and media, followed by a complete HTML5 form that uses native validation—no JavaScript needed for validation 💡.</p>
+      </div>
+      <div>
+        <!-- Inline SVG image to keep this single-file & self-contained -->
+        <figure aria-labelledby="fig1cap">
+          <svg role="img" aria-labelledby="fig1cap" viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="#6dd5ff"/><stop offset="1" stop-color="#a17cff"/>
+              </linearGradient>
+            </defs>
+            <rect width="640" height="320" fill="#0b1020"/>
+            <g transform="translate(24,24)">
+              <rect width="592" height="272" rx="18" fill="#11183a" stroke="#273051"/>
+              <rect x="40" y="40" width="512" height="20" rx="10" fill="url(#g1)"/>
+              <rect x="40" y="84" width="360" height="14" rx="7" fill="#273051"/>
+              <rect x="40" y="108" width="400" height="14" rx="7" fill="#273051"/>
+              <rect x="40" y="172" width="200" height="32" rx="8" fill="#273051"/>
+              <rect x="260" y="172" width="140" height="32" rx="8" fill="#273051"/>
+              <rect x="420" y="172" width="132" height="32" rx="8" fill="#6dd5ff"/>
+            </g>
+          </svg>
+          <figcaption id="fig1cap">Inline SVG mockup demonstrating a clean, accessible layout.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="curriculum" aria-labelledby="cur-title">
+      <h2 id="cur-title">Content Structure Examples</h2>
+
+      <div class="grid-2">
+        <article aria-labelledby="list-title">
+          <h3 id="list-title">Well-Structured Lists</h3>
+          <p>Use lists to group related items clearly:</p>
+          <ol>
+            <li>Plan content and choose semantic tags.</li>
+            <li>Design accessible navigation and headings.</li>
+            <li>Implement validated HTML5 forms.</li>
+            <li>Refine with CSS for clarity (no JS validation ✔️).</li>
+          </ol>
+          <p>Common best practices:</p>
+          <ul>
+            <li>Provide <strong>labels</strong> for every control.</li>
+            <li>Use <span class="kbd">&lt;fieldset&gt;</span> and <span class="kbd">&lt;legend&gt;</span> to group related inputs.</li>
+            <li>Use <em>native</em> types and attributes (<code>required</code>, <code>pattern</code>, <code>min</code>, <code>max</code>, <code>step</code>, <code>readonly</code>, <code>autocomplete</code>).</li>
+            <li>Offer concise help text via <code>aria-describedby</code>.</li>
+          </ul>
+        </article>
+
+        <aside aria-labelledby="tbl-title">
+          <h3 id="tbl-title">Accessible Table</h3>
+          <table aria-describedby="tbl-note">
+            <caption>Sample Workshop Schedule</caption>
+            <thead>
+              <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Topic</th>
+                <th scope="col">Format</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><time datetime="09:00">09:00</time>–<time datetime="09:45">09:45</time></th>
+                <td>HTML5 Semantics</td>
+                <td>Talk</td>
+              </tr>
+              <tr>
+                <th scope="row"><time datetime="10:00">10:00</time>–<time datetime="11:15">11:15</time></th>
+                <td>Accessible Forms</td>
+                <td>Hands-on</td>
+              </tr>
+              <tr>
+                <th scope="row"><time datetime="11:30">11:30</time>–<time datetime="12:15">12:15</time></th>
+                <td>Media Elements</td>
+                <td>Demo</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">All times local. Bring a laptop and enthusiasm ❗</td>
+              </tr>
+            </tfoot>
+          </table>
+          <p id="tbl-note" class="hint">The table uses <code>&lt;caption&gt;</code>, <code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code>/<code>&lt;tfoot&gt;</code>, and scoped headers for screen reader clarity.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="media" aria-labelledby="media-title">
+      <h2 id="media-title">Embedded Media</h2>
+      <div class="grid-2">
+        <figure>
+          <video controls width="100%" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'%3E%3Crect width='640' height='360' fill='%230b1020'/%3E%3Crect x='40' y='40' width='560' height='280' rx='16' fill='%2310183a' stroke='%23273051'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23cfe2ff' font-family='system-ui' font-size='22'%3EHTML5 Video Placeholder%3C/text%3E%3C/svg%3E">
+            <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/7/70/Example.webm/Example.webm.360p.vp9.webm" type="video/webm">
+            <source src="https://upload.wikimedia.org/wikipedia/commons/7/70/Example.webm" type="video/webm">
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>Video demo embedded with semantic <code>&lt;video&gt;</code> and a poster image.</figcaption>
+        </figure>
+
+        <figure>
+          <audio controls>
+            <source src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Bach_-_Prelude_in_C_major%2C_BWV_846%2C_No._1.ogg" type="audio/ogg">
+            Your browser does not support the audio element.
+          </audio>
+          <figcaption>Audio sample using native <code>&lt;audio&gt;</code> controls.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===================== FORM ===================== -->
+    <section id="form" aria-labelledby="form-title">
+      <h2 id="form-title">Registration Form</h2>
+      <p class="note">This form demonstrates native HTML5 validation. Required fields are marked with an asterisk (<span aria-hidden="true" style="color:#ff6b6b">*</span>). No JavaScript is used for validation ✔️.</p>
+
+      <form action="https://httpbin.org/post" method="post" enctype="multipart/form-data" autocomplete="on" novalidate="false">
+        <div class="form-grid">
+
+          <!-- Personal Information -->
+          <fieldset class="required" aria-labelledby="fs-personal-legend">
+            <legend id="fs-personal-legend">Personal Information</legend>
+            <div class="control">
+              <label for="appId">Application ID</label>
+              <input id="appId" name="application_id" type="text" value="AF-2025-00123" readonly aria-readonly="true" />
+              <p class="hint" id="appIdHint">This field is <strong>readonly</strong> and included on submit.</p>
+            </div>
+
+            <div class="control">
+              <label for="fname">First name</label>
+              <input id="fname" name="given_name" type="text" placeholder="Jane" required minlength="2" maxlength="40" autocomplete="given-name" aria-describedby="fnameHint" autofocus />
+              <p class="hint" id="fnameHint">2–40 letters. Avoid numerals.</p>
+            </div>
+
+            <div class="control">
+              <label for="lname">Last name</label>
+              <input id="lname" name="family_name" type="text" placeholder="Doe" required minlength="2" maxlength="60" autocomplete="family-name" />
+            </div>
+
+            <div class="control">
+              <label for="dob">Date of birth</label>
+              <!-- Allow ages 16–120 (static max/min for this assignment; adjust as needed) -->
+              <input id="dob" name="dob" type="date" required min="1905-01-01" max="2009-08-25" aria-describedby="dobHint" />
+              <p class="hint" id="dobHint">Must be on or before <time datetime="2009-08-25">Aug 25, 2009</time> (16+).</p>
+            </div>
+
+            <div class="control">
+              <span class="sr-only" id="gender-hint">Choose one option</span>
+              <label>Gender</label>
+              <div class="choices" role="radiogroup" aria-describedby="gender-hint">
+                <label><input type="radio" name="gender" value="female" required /> Female</label>
+                <label><input type="radio" name="gender" value="male" /> Male</label>
+                <label><input type="radio" name="gender" value="nonbinary" /> Non-binary</label>
+                <label><input type="radio" name="gender" value="prefer_not" /> Prefer not to say</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Contact -->
+          <fieldset class="required" aria-labelledby="fs-contact-legend">
+            <legend id="fs-contact-legend">Contact</legend>
+
+            <div class="control">
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email" placeholder="jane@example.com" required autocomplete="email" inputmode="email" />
+            </div>
+
+            <div class="control">
+              <label for="phone">Phone</label>
+              <input id="phone" name="tel" type="tel" placeholder="+256 700 000000" required autocomplete="tel" inputmode="tel"
+                pattern="^\+?[0-9\s\-]{7,15}$"
+                title="Use 7–15 digits; spaces and dashes allowed. Example: +256 700 000000" />
+            </div>
+
+            <div class="control">
+              <label for="portfolio">Portfolio URL (optional)</label>
+              <input id="portfolio" name="portfolio" type="url" placeholder="https://example.dev" autocomplete="url" />
+            </div>
+
+            <div class="control">
+              <label for="contactTime">Preferred contact time</label>
+              <input id="contactTime" name="contact_time" type="time" required step="900" />
+              <p class="hint">Choose a time (15 min increments).</p>
+            </div>
+          </fieldset>
+
+          <!-- Address -->
+          <fieldset class="required" aria-labelledby="fs-address-legend">
+            <legend id="fs-address-legend">Address</legend>
+
+            <div class="control">
+              <label for="address1">Address line 1</label>
+              <input id="address1" name="address_line1" type="text" placeholder="Plot 1, Kampala Rd" required autocomplete="address-line1" />
+            </div>
+
+            <div class="control">
+              <label for="address2">Address line 2 (optional)</label>
+              <input id="address2" name="address_line2" type="text" placeholder="Apartment, suite, etc." autocomplete="address-line2" />
+            </div>
+
+            <div class="control">
+              <label for="city">City</label>
+              <input id="city" name="address_city" list="city-list" placeholder="Start typing…" required autocomplete="address-level2" />
+              <datalist id="city-list">
+                <option value="Kampala"></option>
+                <option value="Entebbe"></option>
+                <option value="Jinja"></option>
+                <option value="Mbarara"></option>
+                <option value="Gulu"></option>
+              </datalist>
+            </div>
+
+            <div class="control">
+              <label for="state">State/Province/Region</label>
+              <input id="state" name="address_state" type="text" placeholder="Central Region" autocomplete="address-level1" />
+            </div>
+
+            <div class="control">
+              <label for="zip">Postal code</label>
+              <input id="zip" name="postal_code" type="text" placeholder="00000" required inputmode="numeric" autocomplete="postal-code"
+                pattern="^\d{3,10}$" title="Enter 3 to 10 digits." />
+            </div>
+
+            <div class="control">
+              <label for="country">Country</label>
+              <select id="country" name="country" required autocomplete="country-name">
+                <option value="" selected disabled>Choose country…</option>
+                <option value="Uganda">Uganda</option>
+                <option value="Kenya">Kenya</option>
+                <option value="Tanzania">Tanzania</option>
+                <option value="Rwanda">Rwanda</option>
+                <option value="South Sudan">South Sudan</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <!-- Preferences -->
+          <fieldset aria-labelledby="fs-pref-legend">
+            <legend id="fs-pref-legend">Preferences</legend>
+
+            <div class="control">
+              <label for="role">Role applying for</label>
+              <select id="role" name="role" required>
+                <optgroup label="Frontend">
+                  <option value="html_dev">HTML Developer</option>
+                  <option value="css_arch">CSS Architect</option>
+                  <option value="ui_engineer">UI Engineer</option>
+                </optgroup>
+                <optgroup label="Backend">
+                  <option value="node_dev">Node.js Developer</option>
+                  <option value="api_eng">API Engineer</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="control">
+              <label for="color">Favorite brand color</label>
+              <input id="color" name="brand_color" type="color" value="#6dd5ff" />
+            </div>
+
+            <div class="control">
+              <label for="salary">Salary expectation (USD)</label>
+              <div class="inline">
+                <input id="salary" name="salary" type="range" min="30000" max="200000" step="1000" value="80000"
+                       oninput="document.getElementById('salaryOut').value=this.value">
+                <output id="salaryOut" name="salary_display" for="salary">80000</output>
+              </div>
+              <p class="hint">Drag the slider to choose your expected annual salary.</p>
+            </div>
+
+            <div class="control">
+              <label>Skills (choose at least one)</label>
+              <div class="choices">
+                <label><input type="checkbox" name="skills" value="html" required /> HTML</label>
+                <label><input type="checkbox" name="skills" value="css" /> CSS</label>
+                <label><input type="checkbox" name="skills" value="js" /> JavaScript</label>
+                <label><input type="checkbox" name="skills" value="a11y" /> Accessibility</label>
+                <label><input type="checkbox" name="skills" value="perf" /> Performance</label>
+              </div>
+              <p class="hint">Mark at least one skill.</p>
+            </div>
+
+            <div class="control">
+              <label for="start">Earliest start date</label>
+              <input id="start" name="start_date" type="datetime-local" required />
+            </div>
+
+            <div class="control">
+              <label for="newsletter">Newsletter</label>
+              <select id="newsletter" name="newsletter_frequency">
+                <option value="none">No thanks</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <!-- Professional -->
+          <fieldset class="required" aria-labelledby="fs-prof-legend">
+            <legend id="fs-prof-legend">Professional Details</legend>
+
+            <div class="control">
+              <label for="username">Username</label>
+              <input id="username" name="username" type="text" placeholder="jane_doe" required minlength="3" maxlength="20"
+                     pattern="^[a-zA-Z0-9_\.]{3,20}$" title="3–20 characters: letters, numbers, underscores, dots." autocomplete="username" />
+            </div>
+
+            <div class="control">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" placeholder="8+ strong characters" required minlength="8" maxlength="64"
+                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$"
+                     title="Min 8 chars, with upper, lower, number, and special (@$!%*?#&)." autocomplete="new-password" />
+            </div>
+
+            <div class="control">
+              <label for="years">Years of experience</label>
+              <input id="years" name="experience_years" type="number" min="0" max="50" step="1" required placeholder="0" />
+            </div>
+
+            <div class="control">
+              <label for="bio">Short bio</label>
+              <textarea id="bio" name="bio" placeholder="Tell us about your background…" required minlength="30" maxlength="500"></textarea>
+              <p class="hint">30–500 characters.</p>
+            </div>
+          </fieldset>
+
+          <!-- Files & Consent -->
+          <fieldset aria-labelledby="fs-files-legend">
+            <legend id="fs-files-legend">Files & Consent</legend>
+
+            <div class="control">
+              <label for="resume">Upload résumé (PDF)</label>
+              <input id="resume" name="resume" type="file" accept="application/pdf" required />
+              <p class="hint">PDF only. Max size depends on server policy.</p>
+            </div>
+
+            <div class="control">
+              <label for="shots">Upload portfolio images (optional)</label>
+              <input id="shots" name="portfolio_images" type="file" accept="image/*" multiple />
+            </div>
+
+            <div class="control">
+              <label for="ref">How did you hear about us? (searchable)</label>
+              <input id="ref" name="ref_source" type="search" placeholder="Search or type a source…" list="ref-list" />
+              <datalist id="ref-list">
+                <option value="Friend referral"></option>
+                <option value="Twitter/X"></option>
+                <option value="LinkedIn"></option>
+                <option value="Conference talk"></option>
+                <option value="Online article/blog"></option>
+              </datalist>
+            </div>
+
+            <div class="control">
+              <label class="inline">
+                <input type="checkbox" name="terms" required />
+                I agree to the <a href="#" aria-label="Read the privacy policy (opens dialog)">privacy policy</a>.
+              </label>
+            </div>
+          </fieldset>
+
+        </div>
+
+        <div class="btns" role="group" aria-label="Form actions">
+          <input class="primary" type="submit" value="Submit Application" />
+          <input class="outline" type="reset" value="Reset" />
+        </div>
+
+        <p class="footnote">Tip: Browsers provide built-in messages for invalid fields. Use the native UI to fix any highlighted inputs 🤔.</p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="container" style="margin:30px auto 60px">
+    <p>Made with semantic HTML5, native validation, and accessible patterns. <span aria-hidden="true">🔨🤖🔧</span></p>
+  </footer>
+</body>
+</html>
